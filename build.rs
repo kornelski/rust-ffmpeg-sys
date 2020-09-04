@@ -323,7 +323,7 @@ fn build() -> io::Result<()> {
     enable!(configure, "BUILD_LIB_X265", "libx265");
     enable!(configure, "BUILD_LIB_AVS", "libavs");
     enable!(configure, "BUILD_LIB_XVID", "libxvid");
-
+    enable!(configure, "BUILD_LIB_DRM", "libdrm");
     // other external libraries
     enable!(configure, "BUILD_LIB_DRM", "libdrm");
     enable!(configure, "BUILD_NVENC", "nvenc");
@@ -1200,7 +1200,6 @@ fn main() {
         .header(search_include(&include_paths, "libavutil/hash.h"))
         .header(search_include(&include_paths, "libavutil/hmac.h"))
         .header(search_include(&include_paths, "libavutil/hwcontext.h"))
-        .header(search_include(&include_paths, "libavutil/hwcontext_drm.h"))
         .header(search_include(&include_paths, "libavutil/imgutils.h"))
         .header(search_include(&include_paths, "libavutil/lfg.h"))
         .header(search_include(&include_paths, "libavutil/log.h"))
@@ -1241,6 +1240,10 @@ fn main() {
 
     if env::var("CARGO_FEATURE_SWSCALE").is_ok() {
         builder = builder.header(search_include(&include_paths, "libswscale/swscale.h"));
+    }
+
+    if env::var("CARGO_FEATURE_LIB_DRM").is_ok() {
+        builder = builder.header(search_include(&include_paths, "libavutil/hwcontext_drm.h"))
     }
 
     // Finish the builder and generate the bindings.
